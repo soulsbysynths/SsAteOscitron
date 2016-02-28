@@ -5,6 +5,7 @@
 #include <Wavetable/Wavetable.h>
 #include <AteOscOscillator.h>
 #include <AteOscPatch.h>
+#include <AteOscPitch.h>
 #include <SsHelpers.h>
 #include <BiquadFilter.h>
 #include <Portamento.h>
