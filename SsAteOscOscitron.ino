@@ -7,7 +7,8 @@
 #include <AteOscPatch.h>
 #include <AteOscPitch.h>
 #include <SsHelpers.h>
-#include <BiquadFilter.h>
+//#include <BiquadFilter.h>
+#include <BiquadFilterFM.h>
 #include <Portamento.h>
 #include <QuantizePitch.h>
 #include <AtmPitch.h>
@@ -24,7 +25,7 @@ AteOsc oscitron;
 
 void setup()
 {
-
+	//Serial.begin(9600);
 	oscitron.initialize();
 
 }
@@ -35,4 +36,8 @@ void loop()
 	unsigned char ticksPassed = millis() - last_millis;
 	last_millis += ticksPassed;
 	oscitron.poll(ticksPassed);
+		//static unsigned long lastUs = 0;
+		//unsigned long us = micros();
+		//Serial.println(us - lastUs);
+		//lastUs = micros();
 }
