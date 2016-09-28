@@ -20,6 +20,7 @@
 #include <CvInput.h>
 #include <Switch.h>
 #include <RotaryEncoder.h>
+#include <FixedMath/FixedMath.h>
 
 AteOsc oscitron;
 

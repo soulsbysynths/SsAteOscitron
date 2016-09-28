@@ -26,8 +26,3 @@ extern "C" void __cxa_pure_virtual() {;}
 #include "C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\standard\pins_arduino.h" 
 #include "C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\arduino.h"
 #include <..\SsAteOscOscitron\SsAteOscOscitron.ino>
-#include <..\SsAteOscOscitron\AteOscPitchProgmem.h>
-#include <..\SsAteOscOscitron\BiquadFilterFM.cpp>
-#include <..\SsAteOscOscitron\BiquadFilterFM.h>
-#include <..\SsAteOscOscitron\BiquadFilterFMBase.h>
-#include <..\SsAteOscOscitron\FixedMath.h>
