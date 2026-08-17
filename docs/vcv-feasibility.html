@@ -1,0 +1,502 @@
+<title>Oscitron to VCV</title>
+<style>
+  :root {
+    --paper: #e9e7dd;
+    --surface: #f4f2e8;
+    --surface-2: #ddd9c9;
+    --ink: #1c231f;
+    --ink-soft: #4a544c;
+    --line: #c7c1a9;
+    --copper: #a8622a;
+    --copper-ink: #7c4a20;
+    --teal: #276b62;
+    --teal-ink: #1d514a;
+    --code-bg: #dedac7;
+    --shadow: 0 1px 0 rgba(28,35,31,0.06);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #141815;
+      --surface: #1b201c;
+      --surface-2: #262b25;
+      --ink: #e7e4d8;
+      --ink-soft: #a9ad9f;
+      --line: #35392f;
+      --copper: #d99456;
+      --copper-ink: #eab27a;
+      --teal: #57b3a4;
+      --teal-ink: #7dcabd;
+      --code-bg: #20251f;
+      --shadow: 0 1px 0 rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #141815;
+    --surface: #1b201c;
+    --surface-2: #262b25;
+    --ink: #e7e4d8;
+    --ink-soft: #a9ad9f;
+    --line: #35392f;
+    --copper: #d99456;
+    --copper-ink: #eab27a;
+    --teal: #57b3a4;
+    --teal-ink: #7dcabd;
+    --code-bg: #20251f;
+    --shadow: 0 1px 0 rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background:
+      radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0) 0 0/22px 22px,
+      var(--paper);
+    background-attachment: local;
+    color: var(--ink);
+    font-family: Georgia, "Iowan Old Style", "Charter", "Noto Serif", serif;
+    font-size: 16px;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0 20px 96px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) body {
+      background:
+        radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0) 0 0/22px 22px,
+        var(--paper);
+    }
+  }
+  :root[data-theme="dark"] body {
+    background:
+      radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0) 0 0/22px 22px,
+      var(--paper);
+  }
+
+  .sheet {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .titleblock {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    margin-top: 40px;
+    padding: 28px 32px 24px;
+  }
+
+  .eyebrow {
+    font-family: "Bahnschrift", "SF Compact Text", "Segoe UI", Arial, sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--copper-ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  h1.doctitle {
+    font-family: "Bahnschrift", "SF Compact Text", "Segoe UI", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 10px 0 6px;
+    color: var(--ink);
+  }
+  .doctitle .arrow { color: var(--teal-ink); font-weight: 400; padding: 0 4px; }
+
+  .meta {
+    font-family: "Consolas", "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    color: var(--ink-soft);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 22px;
+    margin-top: 14px;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+  }
+  .meta b { color: var(--ink); font-weight: 600; }
+
+  main { padding-top: 8px; }
+
+  section { margin-top: 46px; }
+
+  h2 {
+    font-family: "Bahnschrift", "SF Compact Text", "Segoe UI", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    text-wrap: balance;
+    color: var(--ink);
+    margin: 0 0 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  h2 .num {
+    font-family: "Consolas", "SF Mono", Menlo, monospace;
+    font-size: 14px;
+    color: var(--teal-ink);
+    font-weight: 600;
+  }
+  .section-rule {
+    height: 1px;
+    background: linear-gradient(to right, var(--copper) 0 42px, var(--line) 42px 100%);
+    margin: 10px 0 20px;
+  }
+
+  h3 {
+    font-family: "Bahnschrift", "SF Compact Text", "Segoe UI", Arial, sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ink);
+    margin: 26px 0 10px;
+  }
+
+  p { margin: 14px 0; max-width: 66ch; }
+  ul, ol { max-width: 66ch; padding-left: 22px; }
+  li { margin: 6px 0; }
+  strong { color: var(--ink); }
+
+  a { color: var(--teal-ink); text-decoration-color: var(--line); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--teal-ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+
+  code {
+    font-family: "Consolas", "SF Mono", Menlo, monospace;
+    font-size: 0.86em;
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 0.05em 0.4em;
+    color: var(--ink);
+  }
+
+  .callout {
+    border-left: 3px solid var(--copper);
+    background: var(--surface);
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+  .callout .eyebrow { margin-bottom: 8px; }
+  .callout p:first-of-type { margin-top: 0; }
+  .callout p:last-of-type { margin-bottom: 0; }
+
+  .table-wrap { overflow-x: auto; margin: 20px 0; border: 1px solid var(--line); }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; background: var(--surface); }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th {
+    font-family: "Bahnschrift", "SF Compact Text", "Segoe UI", Arial, sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--surface-2);
+  }
+  tr:last-child td { border-bottom: none; }
+  td code { white-space: nowrap; }
+
+  .badge {
+    display: inline-block;
+    font-family: "Bahnschrift", "SF Compact Text", "Segoe UI", Arial, sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 9px;
+    border-radius: 2px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .badge.recommended { background: var(--teal); color: #eef7f4; }
+  :root[data-theme="dark"] .badge.recommended,
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .badge.recommended { color: #0d1a17; } }
+
+  .path {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+    margin: 22px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .path li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 14px;
+    align-items: start;
+    margin: 0;
+  }
+  .path li::before {
+    content: counter(step);
+    font-family: "Consolas", "SF Mono", Menlo, monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--paper);
+    background: var(--copper);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footnote-src {
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .questions {
+    border: 1px dashed var(--line);
+    padding: 18px 22px;
+    background: var(--surface);
+    margin-top: 20px;
+  }
+  .questions li { margin: 10px 0; }
+
+  footer {
+    max-width: 780px;
+    margin: 60px auto 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-family: "Consolas", "SF Mono", Menlo, monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 560px) {
+    .titleblock { padding: 22px 18px 18px; }
+    h1.doctitle { font-size: 24px; }
+    section { margin-top: 36px; }
+  }
+</style>
+
+<div class="sheet">
+  <div class="titleblock">
+    <div class="eyebrow">Feasibility study</div>
+    <h1 class="doctitle">Oscitron<span class="arrow">&nbsp;&rarr;&nbsp;</span>VCV Rack</h1>
+    <p style="margin:0; color:var(--ink-soft); max-width:60ch;">Assessing a port of the Oscitron eurorack firmware to a VCV Rack plugin — emulation strategy, timing fidelity, output-stage modelling, and integration path.</p>
+    <div class="meta">
+      <span><b>Date</b> 2026&#8209;08&#8209;17</span>
+      <span><b>Subject</b> SsAteOscitron &rarr; VCV plugin</span>
+      <span><b>Firmware</b> ATmega328P, 16&nbsp;MHz</span>
+    </div>
+  </div>
+
+  <main>
+
+    <section>
+      <div class="eyebrow">Summary</div>
+      <h2>Recommendation</h2>
+      <div class="section-rule"></div>
+      <div class="callout">
+        <div class="eyebrow" style="color:var(--teal-ink);">Port the DSP natively — don't emulate the AVR<span class="badge recommended">Recommended</span></div>
+        <p>While building the bare-metal AVR-GCC port earlier in this session, one thing became clear: this codebase already separates cleanly into two halves.</p>
+        <p><strong>~20 of the 22 libraries are pure DSP/data</strong>, with zero hardware register access: <code>AteOscEngine</code>, <code>AteOscOscillator</code>, <code>AteOscPatch</code>, <code>AteOscPitch</code>, <code>AtmPitch</code>, <code>BiquadFilterFM</code>, <code>CvInput</code>, <code>Flanger</code>, <code>Portamento</code>, <code>Pwm</code>, <code>QuantizePitch</code>, <code>Wavecrusher</code>, <code>Wavetable</code>, <code>FixedMath</code>, <code>SsHelpers</code>, <code>RotaryEncoder</code>, <code>Switch</code>, <code>LedCircular</code>, <code>LedRgb</code>. These compile as ordinary C++ on any platform once <code>avr/pgmspace.h</code>'s <code>PROGMEM</code>/<code>pgm_read_*</code> macros are shimmed to no-ops &mdash; <code>FixedMath.h</code> is a good example, pure lookup tables, no inline assembly.</p>
+        <p><strong>Only 2 libraries touch AVR hardware directly</strong>: <code>AteOscHardware.cpp</code> (ADC, TWI/I&sup2;C, GPIO, EEPROM) and <code>AtmAudio.cpp</code> (Timer1/Timer2 audio output). Everything hardware-specific is already concentrated where you'd want it for a port.</p>
+        <p>Instruction-level AVR emulation is real, proven technology &mdash; but it solves a much harder problem than this port needs, moving the risk from "does the DSP sound right" (answerable by ear, against your own hardware, quickly) to "did I model the ADC/TWI/timer peripherals correctly" (answerable only by deep AVR peripheral archaeology). Spend the effort on reproducing the specific, characterful non-idealities faithfully &mdash; not on reproducing the chip that produces them.</p>
+      </div>
+      <p>Both paths are viable engineering projects. Both are covered in full below, since you asked for both, along with where they intersect.</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">Part 1 of 5</div>
+      <h2><span class="num">01</span> Functional-level emulation &mdash; native port</h2>
+      <div class="section-rule"></div>
+      <p><strong>What it is:</strong> compile the existing DSP libraries (unmodified engine logic) as native x86/ARM C++, and replace <code>AteOscHardware</code>/<code>AtmAudio</code> with a thin adapter mapping VCV Rack's params/inputs/lights onto the interface the engine already calls &mdash; <code>hardwareCvInputChanged()</code>, <code>hardwareSwitchChanged()</code>, <code>hardwareGateInputChanged()</code> and so on are already the shape of <code>AteOsc.cpp</code>'s public surface.</p>
+
+      <h3>Effort: low&ndash;moderate</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Task</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td><code>#define PROGMEM</code> / <code>pgm_read_byte(p) (*(p))</code> shim header</td><td>Only AVR-specific dependency in the pure-DSP libraries</td></tr>
+            <tr><td>Replace <code>AteOscHardware</code> with a <code>VcvOscHardware</code> adapter</td><td>Owns the 8 <code>CvInput</code> channels and 2 encoder/switch/LED sets, fed from VCV <code>inputs[]</code>/<code>params[]</code> each <code>process()</code> instead of ADC/TWI</td></tr>
+            <tr><td>Replace the Timer1/Timer2 ISR pair with a <code>process()</code>-driven equivalent</td><td>See §03 &mdash; the one place a literal 1:1 port would be <em>wrong</em>; must reproduce the ISR's audible behaviour, not its register writes</td></tr>
+            <tr><td>FRAM/EEPROM patch storage &rarr; file or VCV's <code>dataToJson</code>/<code>dataFromJson</code></td><td>The physical <code>FM24C64B</code> chip has no VCV equivalent &mdash; a straight simplification</td></tr>
+            <tr><td>MCP23017 I&sup2;C GPIO expander &rarr; direct panel widget state</td><td>Same reasoning</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Keep the fixed-point arithmetic</h3>
+      <p>The engine uses <code>int</code>/<code>char</code>/fixed-point throughout &mdash; <code>FixedMath.h</code>'s 10-bit sine/tan tables, <code>Wavetable</code>'s <code>int8_t</code> samples &mdash; not floating point. Keep it that way in the port. The specific quantization <em>is</em> part of the sound; "upgrading" to float would silently change the noise floor and rounding behaviour of every filter and oscillator stage.</p>
+
+      <h3>CV scaling: reuse the firmware's calibration system</h3>
+      <p>CV inputs are 0&ndash;5&nbsp;V; external bipolar LFOs/10V envelopes go through a separate module, <code>UniFive</code>, first. I read <code>UniFive8.sch</code> (the latest of several revisions): it's a trimmer-calibrated op-amp scaling circuit (<code>LM4040</code> 2.5&nbsp;V references, <code>3352T</code> trim pots in the feedback path). Its exact transfer function depends on a physical trim pot position not encoded in the schematic &mdash; not worth deriving analytically. It doesn't need to be: <code>AteOscHardware.h</code> already has a per-unit calibration system (<code>cvCalib_[2][3]</code>, <code>EEPROM_FILT_HIGH</code>/<code>LOW</code>, a whole separate <code>AteOscHardwareCalibrate</code> library) the firmware itself uses to map raw ADC counts to musical values. Port <em>that</em> logic, seeded with either the real module's calibration constants (readable from its EEPROM) or sensible defaults &mdash; that's the actual source of truth for CV scaling, not the analog trim network.</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">Part 2 of 5</div>
+      <h2><span class="num">02</span> Accurate-level emulation &mdash; instruction/peripheral-accurate</h2>
+      <div class="section-rule"></div>
+      <p><strong>What it is:</strong> run the actual compiled firmware &mdash; the <code>.elf</code> already built in this repo (<code>Debug/SsAteOscitron.elf</code>) &mdash; inside a real AVR CPU simulator, driven cycle-by-cycle from VCV's audio callback, with virtual peripherals standing in for the physical chips.</p>
+      <p><strong>Recommended core: <a href="https://github.com/buserror/simavr">simavr</a>.</strong> Native C, actively maintained, built for exactly this "embed a real AVR core inside a native real-time host" use case &mdash; unlike JS-based alternatives like avr8js. Performance is not the blocker: AVR cores at 16&nbsp;MHz are trivial for simavr to simulate many times faster than real-time on modern hardware, so the constraint is implementation completeness, not CPU budget.</p>
+
+      <h3>This is proven in VCV Rack specifically, not a novel idea</h3>
+      <ul>
+        <li><a href="https://github.com/Kautenja/RackNES">RackNES</a> runs a real NES CPU/APU emulator (derived from <a href="https://github.com/amhndu/SimpleNES">SimpleNES</a> + <a href="https://github.com/blargg/Nes_Snd_Emu">Nes_Snd_Emu</a>) inside a VCV module.</li>
+        <li><a href="https://library.vcvrack.com/?brand=KautenjaDSP">KautenjaDSP's plugins</a> emulate the Ricoh 2A03.</li>
+        <li>SID-chip modules (<a href="https://github.com/bongozone/vcvrack-sid">vcvrack-sid</a>, <a href="https://github.com/wipu/sidex-vcv">sidex-vcv</a>) do the same for the C64's SID.</li>
+      </ul>
+
+      <h3>What has to be built beyond the CPU core</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Peripheral</th><th>Real usage</th><th>Emulation need</th></tr></thead>
+          <tbody>
+            <tr><td>Timer1 (CTC, <code>OCR1A</code>)</td><td>Variable-rate audio-sample ISR &mdash; see §03</td><td>simavr has built-in timer support; tap the ISR's <code>OCR2B</code> write each firing</td></tr>
+            <tr><td>Timer2 (Fast PWM, <code>OCR2B</code>)</td><td>8-bit PWM DAC, fixed ~62.5&nbsp;kHz carrier (<code>F_CPU/256</code>)</td><td>Tap <code>OCR2B</code> writes directly rather than reconstructing and filtering the PWM waveform &mdash; cheaper and exact</td></tr>
+            <tr><td>ADC</td><td>CV/pot reads <em>and</em> audio-in capture (<code>ISR(ADC_vect)</code>, <code>BUFFER_CAPTURING</code> &mdash; this chip samples an audio input for wavetable capture, not just pot scanning)</td><td>Feed simulated conversion results from VCV <code>inputs[]</code>/<code>params[]</code> each time the emulated ADC triggers</td></tr>
+            <tr><td>TWI/I&sup2;C</td><td>FRAM patch storage (<code>FM24C64B</code>) and MCP23017 GPIO expander, sharing one bus</td><td>Two virtual I&sup2;C peripherals registered against simavr's TWI hooks</td></tr>
+            <tr><td>EEPROM</td><td>Calibration data</td><td>Seed from the <code>.eep</code> this project already builds (<code>Debug/SsAteOscitron.eep</code>)</td></tr>
+            <tr><td>GPIO / pin-change IRQs</td><td>Switches, rotary encoders</td><td>simavr IRQ hooks per pin, driven from VCV widget state</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>A multi-week effort, not a multi-day one &mdash; mostly the peripheral-modelling table above, not the CPU core itself (that part is solved, off-the-shelf).</p>
+
+      <div class="callout">
+        <div class="eyebrow">When this is worth it</div>
+        <p>If bit-exact reproduction of hardware quirks &mdash; timer jitter, ADC noise floor, EEPROM-calibration-dependent CV scaling &mdash; is a hard product requirement, the way chiptune-emulation plugins market "the real chip, virtualized." If "sounds and behaves the same" is the bar, §01 gets there for a fraction of the effort.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="eyebrow">Part 3 of 5</div>
+      <h2><span class="num">03</span> Throttling to 16&nbsp;MHz &mdash; audio-identical wavetable timing</h2>
+      <div class="section-rule"></div>
+      <p>This is where the real character of the instrument lives, and it applies to <em>both</em> paths above.</p>
+      <p>Reading <code>AtmAudio.cpp</code> directly: the audio path is <strong>not</strong> a fixed sample-rate oscillator. It's built around two timers.</p>
+      <ul>
+        <li><strong>Timer2</strong> runs Fast PWM at a fixed ~62.5&nbsp;kHz carrier (<code>F_CPU/256</code>, unprescaled) &mdash; the actual 8-bit DAC. <code>OCR2B</code> is written with <code>sample&nbsp;+&nbsp;128</code> each time a new wavetable sample is due.</li>
+        <li><strong>Timer1</strong> runs in CTC mode and fires <code>ISR(TIMER1_COMPA_vect)</code> at a <em>variable</em> rate that <strong>is the pitch</strong> &mdash; <code>setSampleFreq()</code> computes <code>OCR1A</code> directly from the target frequency (<code>ocr&nbsp;=&nbsp;(F_CPU&nbsp;&lt;&lt;&nbsp;i)&nbsp;/&nbsp;sampleFreq_</code>). Each firing advances the wavetable read position.</li>
+      </ul>
+      <div class="callout">
+        <div class="eyebrow">The non-obvious detail</div>
+        <p><code>OCR1A</code> is an 8-bit-ish integer divisor of a 16&nbsp;MHz clock, so it can't represent every frequency exactly. Once the divisor would drop below the safe minimum (~255 counts, per the code's own comment), the ISR starts <strong>skipping samples in powers of two</strong> (<code>bufferJump&nbsp;=&nbsp;1&nbsp;&lt;&lt;&nbsp;i</code>) rather than raising the ISR rate further. At higher pitches the wavetable is read with stride&nbsp;&gt;&nbsp;1 &mdash; a reproducible, audible decimation aliasing that's a genuine characteristic of this instrument, not an incidental limitation.</p>
+      </div>
+      <p><strong>For the native port:</strong> don't replace this with a clean floating-point phase accumulator &mdash; it will sound <em>smoother</em> than the real hardware, not <em>the same</em>. Port the integer-divisor-plus-stride-doubling arithmetic verbatim, driven by VCV's <code>args.sampleTime</code> accumulating toward the next "virtual ISR" firing.</p>
+      <p><strong>For the emulated path:</strong> automatic and exact, since you're running the literal ISR &mdash; the only job left is cycle accounting: step the simavr core <code>round(16'000'000&nbsp;&times;&nbsp;args.sampleTime)</code> cycles per <code>process()</code> call, carrying the fractional remainder across calls so it doesn't drift over a session. Standard technique for embedding cycle-accurate emulators in real-time audio hosts.</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">Part 4 of 5</div>
+      <h2><span class="num">04</span> Emulating the OPA2134 output stage</h2>
+      <div class="section-rule"></div>
+      <div class="callout">
+        <div class="eyebrow" style="color:var(--copper-ink);">Update — I read the actual schematic</div>
+        <p><code>PS_atmega_proto_09.sch</code> (the main board) &mdash; Eagle <code>.sch</code> files are plain XML, directly parseable. This revises the recommendation below: the analog stage isn't just inconsequential carrier removal, it meaningfully shapes the audio band &mdash; but it's still a linear circuit, not something needing op-amp non-linearity modelling.</p>
+      </div>
+
+      <h3>Traced signal path, with real values</h3>
+      <div class="table-wrap">
+        <pre style="margin:0; padding:16px 18px; font-family:'Consolas','SF Mono',Menlo,monospace; font-size:13px; line-height:1.7; background:var(--code-bg); overflow-x:auto; white-space:pre;">ATmega PD3 (OC2B, ~62.5 kHz PWM carrier)
+  -&gt; R25 (5k1) -&gt; [C7 (10nF) to GND]      passive pole ~3.1 kHz
+  -&gt; R29 (2k)  -&gt; [C8 (10nF) to GND]      passive pole ~8.0 kHz (loaded further by R30)
+  -&gt; R30 (6k8) -&gt; OPA2134 gate A (-IN), +IN grounded
+       feedback: R31 (6k8) || C9 (100pF)   gain -1, HF pole ~234 kHz (stability only)
+  -&gt; gate A OUT
+       R1 (10k) into gate B (-IN)   [audio path]
+       R2 (10k) into gate B (-IN)   [bias path, via R5 (24.9k) from a 2.5V reference]
+  -&gt; OPA2134 gate B (-IN), +IN grounded
+       feedback: R3 (20k) || C6 (220pF)
+  -&gt; gate B OUT = -2 &times; (gate A audio) - 2 &times; (2.5V-derived bias, &asymp; -1.43 V)
+  -&gt; R4 (1k) -&gt; C12 (10&micro;F, AC-coupling) -&gt; output jack
+       R4+C12 forms a ~15.9 Hz high-pass: DC block / subsonic filter only</pre>
+      </div>
+
+      <p>Two things worth calling out:</p>
+      <ol>
+        <li><strong>The two cascaded passive RC poles (~3.1&nbsp;kHz, ~8&nbsp;kHz) are doing real work in the audible band</strong>, not just killing a 62.5&nbsp;kHz carrier. The oscillator's sample rate is always high relative to typical pitches &mdash; a 128-sample wavetable read out at (pitch&nbsp;&times;&nbsp;128), ~56&nbsp;kHz for a 440&nbsp;Hz note &mdash; so this filter is actively rolling off the top end of the wavetable's own harmonic content. That's part of "the Oscitron sound," not a side effect to ignore. <strong>Revised recommendation: model this as a real 2&ndash;3-pole low-pass in this range, not a generic placeholder far above the audio band.</strong> The stages interact (R30 loads the second pole via the op-amp's virtual ground), so an exact analytical transfer function is fiddly &mdash; SPICE-simulating this exact network, or simply measuring the physical module's frequency response directly, will be faster and more reliable than hand-deriving it.</li>
+        <li><strong>Gate B is an inverting summing amplifier</strong>, not a plain buffer: it combines the filtered audio (gain &times;2, via R3/R1&nbsp;=&nbsp;20k/10k) with a fixed DC bias from a 2.5&nbsp;V reference, most likely cancelling the built-in offset from the firmware's <code>sample&nbsp;+&nbsp;128</code> PWM encoding (§03) before the AC-coupling stage removes whatever DC remains. Net effect for the plugin: linear gain + the filter above &mdash; the DC-cancellation arithmetic itself doesn't need reproducing.</li>
+      </ol>
+      <p><strong>What still doesn't matter:</strong> the OPA2134's own non-linearity/noise. Nothing in this circuit drives it outside its linear region, and its contribution is negligible next to the 8-bit DAC quantization and wavetable-stride aliasing that are the actual character of the instrument. The correction here is the passive filter's cutoff sitting lower and more consequential than assumed &mdash; not the op-amp needing a nonlinear model.</p>
+
+      <h3>The daughterboard</h3>
+      <p>The rotary encoder LED rings are on a separate board (<code>Euro_LED_PCB_06</code>) with no schematic symbols for the LEDs themselves (raw footprints on the board layout) &mdash; but <code>Osci_LED_orientation.png</code> in that folder shows the physical layout directly: <strong>two rings of 16 LEDs</strong>, one per encoder, around a square encoder cutout. Matches <code>LedCircular.h</code>'s own header comment ("Hardware 16 LED array") and its <code>unsigned int</code> bitmask state exactly &mdash; confirms the widget spec in §05: 2 instances of a 16-segment circular LED ring.</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">Part 5 of 5</div>
+      <h2><span class="num">05</span> VCV Rack integration</h2>
+      <div class="section-rule"></div>
+
+      <h3>Interfacing with the audio engine</h3>
+      <p><code>Module::process(const ProcessArgs&amp; args)</code> is called once per audio sample (<code>args.sampleRate</code> / <code>args.sampleTime</code> reflect VCV's <em>engine</em> rate, independently configurable from the audio device's own rate). Standard surface:</p>
+      <ul>
+        <li><code>inputs[X].getVoltage()</code> / <code>outputs[X].setVoltage(v)</code> &mdash; eurorack &plusmn;5&nbsp;V / 10&nbsp;Vpp, matching what Oscitron already outputs as hardware.</li>
+        <li><code>params[X].getValue()</code> &mdash; knob/switch state.</li>
+        <li><code>lights[X].setBrightness(b)</code> &mdash; panel LEDs.</li>
+      </ul>
+      <p>Since the DSP core steps in fixed AVR-clock-relative time (§03), the natural shape is accumulating <code>args.sampleTime</code> toward the next "virtual timer" event inside <code>process()</code> &mdash; true whether you go the native-port or emulated-core route.</p>
+
+      <h3>UI from your source graphics</h3>
+      <p>VCV's workflow: a layered SVG panel with named component nodes, parsed by the SDK's <code>helper.py createmodule &lt;slug&gt; &lt;panel.svg&gt;</code> to auto-generate parameter/port/light declarations and widget placement. Practically: bring your existing panel graphics into an SVG with properly named component layers (Illustrator or Inkscape both work), then let the helper script do the mechanical wiring.</p>
+      <div class="callout">
+        <div class="eyebrow">Needs custom widget code, not just the helper script</div>
+        <p>The panel has 2 rotary encoders, each paired with a <code>LedCircular</code> &mdash; a circular <em>ring</em> of LEDs, likely a wavetable-position indicator &mdash; and an <code>LedRgb</code> in the switch. VCV's stock widget library has no circular LED-ring component, so this needs a custom <code>LightWidget</code>/<code>ParamWidget</code> subclass drawing N lights in a ring and handling encoder-style interaction (relative drag/scroll, not a knob's absolute angle) &mdash; real, bounded work, not a blocker.</p>
+      </div>
+      <p>The 8 CV inputs &mdash; <code>CV_FILT</code>, <code>CV_RES</code>, <code>CV_PITCHPOT</code>, <code>CV_FILTPOT</code>, <code>CV_PITCH</code>, <code>CV_PWM</code>, <code>CV_FLANGE</code>, <code>CV_CAPTURE</code> &mdash; map straightforwardly to 8 VCV input jacks.</p>
+
+      <h3>IDE / toolchain &mdash; correcting the VS2026 assumption</h3>
+      <p>Checked rather than assumed, since it directly affects your setup: <strong>VCV Rack plugins on Windows are built with MinGW-w64 GCC, not MSVC.</strong> The Rack SDK's documented Windows workflow is MSYS2 + <code>mingw-w64-x86_64-gcc</code>, invoked via the SDK's Makefiles &mdash; because Rack's own binary and plugin ABI are GCC-built, and mixing MSVC-compiled plugin code with a GCC-compiled host has real, well-known C++ ABI problems (name mangling, exception handling, standard-library internals all differ between the two families). Plain Visual Studio 2026 with its native MSVC backend is <strong>not</strong> a supported path for the final plugin binary.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Option</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>VS Code + MSYS2/MinGW terminal</td><td>The most commonly documented community setup &mdash; VS Code for editing/IntelliSense, builds run through the MinGW shell's <code>make</code></td></tr>
+            <tr><td>CLion</td><td>First-class MinGW toolchain support, if you'd prefer a fuller IDE</td></tr>
+            <tr><td>Visual Studio, external Makefile project</td><td>Conceptually similar to what we just did in this repo &mdash; pointing the IDE at a non-MSVC toolchain. Viable, but a less-travelled path than the two above</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Either way: a genuinely different toolchain than the AVR-GCC one this repo now uses &mdash; worth a separate project/repo rather than folding into <code>SsAteOscitron.cppproj</code>.</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">Recommendation, in order</div>
+      <h2><span class="num">&rarr;</span> Suggested path</h2>
+      <div class="section-rule"></div>
+      <ol class="path">
+        <li><div><strong>Native port first</strong> (§01). Fastest route to a working, playable VCV module, and where nearly all the actual risk-reduction work &mdash; does the port sound and feel like the hardware &mdash; has to happen regardless of which emulation strategy you eventually pick.</div></li>
+        <li><div><strong>Get the timing model right</strong> (§03) as part of that port. The single highest-leverage detail for "sounds like the real thing," and genuinely cheap to port faithfully rather than approximate.</div></li>
+        <li><div><strong>Treat the OPA2134 stage as a simple filter+gain block</strong> (§04), unless the physical module or schematic reveals a surprise &mdash; deliberate soft clipping, say &mdash; worth preserving.</div></li>
+        <li><div><strong>Revisit full instruction-accurate emulation</strong> (§02) only if the native port's fidelity doesn't satisfy you. Real, proven, but substantially larger &mdash; and you'd likely be reproducing behaviour the native port already captures if §03 is done carefully.</div></li>
+      </ol>
+    </section>
+
+    <section>
+      <div class="eyebrow">Before starting</div>
+      <h2>Open questions</h2>
+      <div class="section-rule"></div>
+      <div class="questions">
+        <ul>
+          <li>Where does the Oscitron-specific Eagle schematic live? Not found under <code>Eagle\projects</code> by name search &mdash; possibly filed under a different product name, given the <code>Ate</code>/<code>Atm</code> naming overlap with Atmegatron-family projects in that folder.</li>
+          <li>Is bit-exact hardware fidelity a hard requirement (leans §02), or is "sounds and plays the same" sufficient (§01)?</li>
+          <li>Does the physical module's output stage have any known intentional coloration &mdash; soft clipping, deliberate ripple &mdash; worth preserving, or is it meant to be clean?</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    SsAteOscitron &middot; feasibility study &middot; findings grounded in direct inspection of AtmAudio.cpp / AteOscHardware.cpp / AteOsc.h in this repo, plus VCV Rack manual + simavr/RackNES/KautenjaDSP prior art
+  </footer>
+</div>
